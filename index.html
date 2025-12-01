@@ -1,34 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Resume - Jakkapan Prakobsri</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS with Dark Mode Config -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: 'Sarabun', sans-serif;
             -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+        
+        /* Glass Panel - Adaptive */
         .glass-panel {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(255, 255, 255, 0.7); /* Light mode default */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Dark Mode Glass Override */
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .text-glow {
             text-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
         }
-        /* Gradient Animation for Champion Section */
+
+        /* Animated Gradient Background */
         @keyframes shine {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
@@ -38,13 +61,16 @@
             background-size: 200% auto;
             animation: shine 4s linear infinite;
         }
+
+        /* YouTube Button Hover */
         .yt-btn:hover {
             background-color: #ff0000;
             border-color: #ff0000;
             color: white;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
         }
-        /* Play Button Pulse Animation */
+
+        /* Pulse Animation */
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
@@ -53,75 +79,83 @@
         .play-btn-pulse:hover {
             animation: pulse-red 1.5s infinite;
         }
-        .lang-switch-active {
-            background-color: rgba(234, 179, 8, 0.2);
-            border-color: rgba(234, 179, 8, 0.5);
-            color: #fbbf24;
+
+        /* Background Pattern Handling */
+        .bg-pattern {
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Light pattern */
+        }
+        .dark .bg-pattern {
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); /* Dark pattern */
         }
     </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen pb-12 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white min-h-screen pb-12 bg-pattern bg-fixed">
 
-    <!-- Language Switcher (Fixed Top Right) -->
-    <div class="fixed top-20 right-4 z-50 md:top-8 md:right-8">
-        <button onclick="toggleLanguage()" class="glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 hover:bg-slate-800 transition shadow-lg border-slate-600">
+    <!-- Control Buttons (Fixed Top Right) -->
+    <div class="fixed top-20 right-4 z-50 md:top-8 md:right-8 flex flex-col gap-2">
+        <!-- Language Switcher -->
+        <button onclick="toggleLanguage()" class="glass-panel px-3 py-1.5 rounded-full flex items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition shadow-lg border-slate-300 dark:border-slate-600">
             <span id="lang-icon" class="text-xl">🇹🇭</span>
-            <span id="lang-text" class="text-xs font-bold text-slate-300">Switch to TH</span>
+            <span id="lang-text" class="text-xs font-bold text-slate-700 dark:text-slate-300">TH</span>
+        </button>
+        <!-- Theme Switcher -->
+        <button onclick="toggleTheme()" class="glass-panel px-3 py-1.5 rounded-full flex items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition shadow-lg border-slate-300 dark:border-slate-600">
+            <i id="theme-icon" data-lucide="sun" class="w-5 h-5 text-yellow-500"></i>
         </button>
     </div>
 
-    <!-- Mobile Top Bar -->
-    <div class="fixed top-0 left-0 w-full z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-700 px-4 py-3 flex justify-between items-center md:hidden shadow-lg">
-        <span class="font-bold text-yellow-500 flex items-center gap-2 text-lg">
-            <i data-lucide="user" class="w-5 h-5"></i> Jakkapan (Dream)
+    <!-- Mobile Top Bar (Glassy & Sticky) -->
+    <div class="fixed top-0 left-0 w-full z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex justify-between items-center md:hidden shadow-lg">
+        <span class="font-bold text-slate-800 dark:text-yellow-500 flex items-center gap-2 text-lg">
+            <i data-lucide="user" class="w-5 h-5"></i> <span class="truncate">Jakkapan (Dream)</span>
         </span>
-        <div class="flex gap-3 pr-12"> <!-- Added padding right to avoid overlap with lang switch on very small screens -->
-            <a href="mailto:praetinee@gmail.com" class="bg-blue-600 p-2 rounded-full text-white hover:bg-blue-500 transition shadow-lg shadow-blue-900/50">
+        <div class="flex gap-3 pr-12"> 
+            <a href="mailto:praetinee@gmail.com" class="bg-blue-600 p-2 rounded-full text-white hover:bg-blue-500 transition shadow-md">
                 <i data-lucide="mail" class="w-5 h-5"></i>
             </a>
-            <a href="https://line.me/ti/p/~praetinee" target="_blank" class="bg-green-500 p-2 rounded-full text-white hover:bg-green-400 transition shadow-lg shadow-green-900/50">
+            <a href="https://line.me/ti/p/~praetinee" target="_blank" class="bg-green-500 p-2 rounded-full text-white hover:bg-green-400 transition shadow-md">
                 <i data-lucide="message-circle" class="w-5 h-5"></i>
             </a>
         </div>
     </div>
 
     <!-- Main Container -->
-    <div class="max-w-6xl mx-auto p-4 md:p-8 pt-24 md:pt-12">
+    <div class="max-w-6xl mx-auto p-4 md:p-8 pt-24 md:pt-12 transition-all duration-300">
       
         <!-- Header Section -->
-        <header class="glass-panel rounded-2xl overflow-hidden shadow-2xl relative mb-8 group">
+        <header class="glass-panel rounded-2xl overflow-hidden shadow-2xl relative mb-8 group transition-all">
             <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-600 via-yellow-500 to-blue-600"></div>
             <div class="p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10">
                 
                 <!-- Photo Area -->
                 <div class="relative flex-shrink-0">
-                    <div class="w-40 h-40 md:w-48 md:h-48 rounded-full border-4 border-yellow-500 overflow-hidden shadow-2xl bg-slate-800 flex items-center justify-center relative group-hover:scale-105 transition duration-500">
-                        <!-- Added object-top class to fix cropping issue -->
+                    <div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-slate-200 dark:border-yellow-500 overflow-hidden shadow-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center relative group-hover:scale-105 transition duration-500">
+                        <!-- Added object-top class -->
                         <img src="https://www.muaythai2000.com/images/news/muaythai/Phetpuchang_Kelasport2.jpg" alt="Jakkapan Profile" class="w-full h-full object-cover object-top">
                     </div>
-                    <div class="absolute bottom-1 right-1 bg-red-600 p-2 rounded-full border-4 border-slate-900 shadow-lg">
+                    <div class="absolute bottom-1 right-1 bg-red-600 p-2 rounded-full border-4 border-white dark:border-slate-900 shadow-lg">
                         <i data-lucide="swords" class="w-5 h-5 text-white"></i>
                     </div>
                 </div>
               
                 <div class="text-center md:text-left flex-1">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight">
-                        <span data-i18n="name">Jakkapan (Dream)</span> <span class="text-yellow-500" data-i18n="surname">Prakobsri</span>
+                    <h1 class="text-3xl md:text-5xl font-bold text-slate-800 dark:text-white mb-2 tracking-tight">
+                        <span data-i18n="name">Jakkapan (Dream)</span> <span class="text-yellow-600 dark:text-yellow-500" data-i18n="surname">Prakobsri</span>
                     </h1>
-                    <h2 class="text-xl md:text-2xl text-red-400 font-semibold mb-4 flex items-center justify-center md:justify-start gap-2" data-i18n="job_title">
+                    <h2 class="text-lg md:text-2xl text-red-600 dark:text-red-400 font-semibold mb-4 flex items-center justify-center md:justify-start gap-2" data-i18n="job_title">
                         FULL-TIME MUAY THAI TRAINER
                     </h2>
-                    <p class="text-slate-300 mb-6 leading-relaxed max-w-xl text-base font-light" data-i18n="bio">
-                        "Blending the spirit of a <strong class="text-yellow-400 font-normal">Channel 7 Stadium Champion</strong> with a <strong class="text-blue-400 font-normal">Master's Degree</strong> in Physical Education. Focusing on effective, fun, and safe training, ready to pass on professional-level skills."
+                    <p class="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed max-w-xl text-base font-medium dark:font-light" data-i18n="bio">
+                        "Blending the spirit of a <strong class="text-yellow-600 dark:text-yellow-400 font-bold dark:font-normal">Channel 7 Stadium Champion</strong> with a <strong class="text-blue-600 dark:text-blue-400 font-bold dark:font-normal">Master's Degree</strong> in Physical Education. Focusing on effective, fun, and safe training, ready to pass on professional-level skills."
                     </p>
                     
                     <!-- Desktop Action Buttons -->
                     <div class="flex flex-col sm:flex-row flex-wrap justify-center md:justify-start gap-3 text-sm font-medium">
-                        <a href="mailto:praetinee@gmail.com" class="flex items-center justify-center gap-2 bg-blue-600/20 text-blue-400 border border-blue-600/50 px-5 py-2.5 rounded-full hover:bg-blue-600 hover:text-white transition group/btn">
+                        <a href="mailto:praetinee@gmail.com" class="flex items-center justify-center gap-2 bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-600/50 px-5 py-2.5 rounded-full hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition group/btn shadow-sm">
                             <i data-lucide="user-check" class="w-4 h-4 group-hover/btn:scale-110 transition"></i> 
                             <span data-i18n="contact_manager">Manager: praetinee@gmail.com</span>
                         </a>
-                        <a href="https://line.me/ti/p/~praetinee" target="_blank" class="flex items-center justify-center gap-2 bg-green-600/20 text-green-400 border border-green-600/50 px-5 py-2.5 rounded-full hover:bg-green-600 hover:text-white transition group/btn">
+                        <a href="https://line.me/ti/p/~praetinee" target="_blank" class="flex items-center justify-center gap-2 bg-green-100 dark:bg-green-600/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-600/50 px-5 py-2.5 rounded-full hover:bg-green-600 hover:text-white dark:hover:bg-green-600 dark:hover:text-white transition group/btn shadow-sm">
                             <i data-lucide="message-circle" class="w-4 h-4 group-hover/btn:scale-110 transition"></i> 
                             Line: praetinee
                         </a>
@@ -129,8 +163,8 @@
                 </div>
             </div>
             
-            <!-- Background Decoration -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+            <!-- Background Decoration (Adaptive) -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
         </header>
 
         <!-- Main Grid -->
@@ -141,102 +175,102 @@
               
                 <!-- Fight Stats -->
                 <div class="glass-panel p-6 rounded-xl relative overflow-hidden">
-                    <h3 class="text-lg font-bold text-yellow-500 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-700 pb-2">
+                    <h3 class="text-lg font-bold text-yellow-600 dark:text-yellow-500 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 pb-2">
                         <i data-lucide="activity" class="w-5 h-5"></i> <span data-i18n="stats_header">Fighter Stats</span>
                     </h3>
                     <div class="space-y-4">
-                        <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-red-500 hover:bg-slate-800 transition">
+                        <div class="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border-l-4 border-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition shadow-sm">
                             <span class="block text-xs text-slate-500 uppercase font-bold tracking-wider mb-1" data-i18n="fight_name_label">Fight Name</span>
-                            <span class="text-xl font-bold text-white" data-i18n="fight_name">Phetphusang Kila Sport</span>
+                            <span class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="fight_name">Phetphusang Kila Sport</span>
                         </div>
-                        <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-blue-500 hover:bg-slate-800 transition">
+                        <div class="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border-l-4 border-blue-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition shadow-sm">
                             <span class="block text-xs text-slate-500 uppercase font-bold tracking-wider mb-1" data-i18n="weight_label">Weight Class</span>
-                            <span class="text-lg font-bold text-white">118 lbs</span>
-                            <span class="text-sm text-slate-400" data-i18n="weight_class">(Bantamweight)</span>
+                            <span class="text-lg font-bold text-slate-900 dark:text-white">118 lbs</span>
+                            <span class="text-sm text-slate-500 dark:text-slate-400" data-i18n="weight_class">(Bantamweight)</span>
                         </div>
-                        <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-green-500 hover:bg-slate-800 transition">
+                        <div class="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border-l-4 border-green-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition shadow-sm">
                             <span class="block text-xs text-slate-500 uppercase font-bold tracking-wider mb-1" data-i18n="style_label">Style</span>
-                            <span class="text-lg font-bold text-white" data-i18n="style_main">Technical (Muay Femeu)</span>
-                            <span class="text-sm text-slate-400" data-i18n="style_desc">Tactical & All-round</span>
+                            <span class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="style_main">Muay Femeu (IQ Fighter)</span>
+                            <span class="text-sm text-slate-500 dark:text-slate-400" data-i18n="style_desc">Smart, Witty & Tactical</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Education -->
                 <div class="glass-panel p-6 rounded-xl">
-                    <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-700 pb-2">
+                    <h3 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 pb-2">
                         <i data-lucide="graduation-cap" class="w-5 h-5"></i> <span data-i18n="edu_header">Education</span>
                     </h3>
-                    <div class="space-y-6 relative border-l-2 border-slate-700 pl-6 ml-2 my-2">
+                    <div class="space-y-6 relative border-l-2 border-slate-300 dark:border-slate-700 pl-6 ml-2 my-2">
                         <div class="relative">
-                            <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-slate-900 border-2 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-                            <h4 class="text-lg font-bold text-white leading-none mb-1" data-i18n="edu_master">Master's Degree</h4>
-                            <p class="text-sm text-slate-400 font-light" data-i18n="edu_master_loc">Thailand National Sports University, Chiang Mai</p>
+                            <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 shadow-md"></div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-none mb-1" data-i18n="edu_master">Master's Degree</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400" data-i18n="edu_master_loc">Thailand National Sports University, Chiang Mai</p>
                         </div>
                         <div class="relative">
-                            <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-500"></div>
-                            <h4 class="text-lg font-bold text-white leading-none mb-1" data-i18n="edu_bachelor">Bachelor's Degree</h4>
-                            <p class="text-sm text-slate-400 font-light" data-i18n="edu_bachelor_loc">Thailand National Sports University, Lampang</p>
+                            <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-400 dark:border-slate-500"></div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-none mb-1" data-i18n="edu_bachelor">Bachelor's Degree</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400" data-i18n="edu_bachelor_loc">Thailand National Sports University, Lampang</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Licenses -->
-                <div class="bg-gradient-to-br from-red-950/80 to-slate-900/90 backdrop-blur-sm p-6 rounded-xl border border-red-900/50 shadow-lg">
-                    <h3 class="text-lg font-bold text-red-400 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-red-900/50 pb-2">
+                <div class="bg-gradient-to-br from-white to-red-50 dark:from-red-950/80 dark:to-slate-900/90 backdrop-blur-sm p-6 rounded-xl border border-red-200 dark:border-red-900/50 shadow-lg">
+                    <h3 class="text-lg font-bold text-red-600 dark:text-red-400 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-red-200 dark:border-red-900/50 pb-2">
                         <i data-lucide="award" class="w-5 h-5"></i> <span data-i18n="cert_header">Certifications</span>
                     </h3>
-                    <ul class="space-y-3 text-sm text-slate-300">
+                    <ul class="space-y-3 text-sm text-slate-700 dark:text-slate-300">
                         <li class="flex items-center gap-3">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 flex-shrink-0"></i> 
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-600 dark:text-green-500 flex-shrink-0"></i> 
                             <span data-i18n="cert_1">C-License Trainer</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 flex-shrink-0"></i> 
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-600 dark:text-green-500 flex-shrink-0"></i> 
                             <span data-i18n="cert_2">Professional Muay Thai Referee</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 flex-shrink-0"></i> 
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-600 dark:text-green-500 flex-shrink-0"></i> 
                             <span data-i18n="cert_3">Amateur Muay Thai Referee (Advanced)</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 flex-shrink-0"></i> 
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-600 dark:text-green-500 flex-shrink-0"></i> 
                             <span data-i18n="cert_4">Amateur Boxing Referee (2 Star)</span>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Why Train With Me (New Section) -->
-                <div class="glass-panel p-6 rounded-xl border border-yellow-500/30 bg-slate-900/50">
-                    <h3 class="text-lg font-bold text-yellow-400 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-700 pb-2">
+                <!-- Why Train With Me (New Section - Left Side) -->
+                <div class="glass-panel p-6 rounded-xl border border-yellow-200 dark:border-yellow-500/30 bg-white/60 dark:bg-slate-900/50">
+                    <h3 class="text-lg font-bold text-yellow-600 dark:text-yellow-400 mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 pb-2">
                         <i data-lucide="flame" class="w-5 h-5 text-red-500"></i> <span data-i18n="why_header">Why Train with Kru Dream?</span>
                     </h3>
                     <div class="space-y-4">
                         <div class="flex gap-3">
-                            <div class="mt-1 bg-yellow-500/20 p-1.5 rounded-lg h-fit">
-                                <i data-lucide="shield-check" class="w-5 h-5 text-yellow-500"></i>
+                            <div class="mt-1 bg-yellow-100 dark:bg-yellow-500/20 p-1.5 rounded-lg h-fit">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-yellow-600 dark:text-yellow-500"></i>
                             </div>
                             <div>
-                                <h4 class="text-white font-bold text-sm" data-i18n="why_1_title">Science-Based & Safe</h4>
-                                <p class="text-slate-400 text-xs mt-1" data-i18n="why_1_desc">Integrating Master's degree knowledge in Sports Science for injury prevention.</p>
+                                <h4 class="text-slate-900 dark:text-white font-bold text-sm" data-i18n="why_1_title">Science-Based & Safe</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1" data-i18n="why_1_desc">Integrating Master's degree knowledge in Sports Science for injury prevention.</p>
                             </div>
                         </div>
                         <div class="flex gap-3">
-                            <div class="mt-1 bg-red-500/20 p-1.5 rounded-lg h-fit">
-                                <i data-lucide="swords" class="w-5 h-5 text-red-500"></i>
+                            <div class="mt-1 bg-red-100 dark:bg-red-500/20 p-1.5 rounded-lg h-fit">
+                                <i data-lucide="swords" class="w-5 h-5 text-red-600 dark:text-red-500"></i>
                             </div>
                             <div>
-                                <h4 class="text-white font-bold text-sm" data-i18n="why_2_title">Authentic Champion Skills</h4>
-                                <p class="text-slate-400 text-xs mt-1" data-i18n="why_2_desc">Learn real fight techniques directly from a Channel 7 Stadium Champion.</p>
+                                <h4 class="text-slate-900 dark:text-white font-bold text-sm" data-i18n="why_2_title">Authentic Champion Skills</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1" data-i18n="why_2_desc">Learn real fight techniques directly from a Channel 7 Stadium Champion.</p>
                             </div>
                         </div>
                         <div class="flex gap-3">
-                            <div class="mt-1 bg-blue-500/20 p-1.5 rounded-lg h-fit">
-                                <i data-lucide="brain-circuit" class="w-5 h-5 text-blue-500"></i>
+                            <div class="mt-1 bg-blue-100 dark:bg-blue-500/20 p-1.5 rounded-lg h-fit">
+                                <i data-lucide="brain-circuit" class="w-5 h-5 text-blue-600 dark:text-blue-500"></i>
                             </div>
                             <div>
-                                <h4 class="text-white font-bold text-sm" data-i18n="why_3_title">Psychology & Mindset</h4>
-                                <p class="text-slate-400 text-xs mt-1" data-i18n="why_3_desc">Developing fighter's mindset using sports psychology principles.</p>
+                                <h4 class="text-slate-900 dark:text-white font-bold text-sm" data-i18n="why_3_title">Psychology & Mindset</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1" data-i18n="why_3_desc">Developing fighter's mindset using sports psychology principles.</p>
                             </div>
                         </div>
                     </div>
@@ -250,66 +284,66 @@
                 <!-- Hall of Fame (Highlighted) -->
                 <div class="glass-panel p-6 md:p-8 rounded-xl border-t-4 border-yellow-500 relative overflow-hidden champion-bg">
                     <div class="absolute right-0 top-0 p-6 opacity-10 pointer-events-none">
-                        <i data-lucide="trophy" class="w-48 h-48 text-yellow-500"></i>
+                        <i data-lucide="trophy" class="w-48 h-48 text-yellow-600/20 dark:text-yellow-500"></i>
                     </div>
                     
-                    <h3 class="text-2xl font-bold text-yellow-400 mb-6 flex items-center gap-3 relative z-10">
-                        <span class="bg-yellow-500/20 p-2 rounded-lg"><i data-lucide="crown" class="w-6 h-6 text-yellow-500"></i></span>
+                    <h3 class="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-6 flex items-center gap-3 relative z-10">
+                        <span class="bg-yellow-100 dark:bg-yellow-500/20 p-2 rounded-lg"><i data-lucide="crown" class="w-6 h-6 text-yellow-600 dark:text-yellow-500"></i></span>
                         <span data-i18n="hof_header">HALL OF FAME</span>
                     </h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
                         <!-- Card 1 -->
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition duration-300">
+                        <div class="bg-white/80 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition duration-300">
                             <div class="flex justify-between items-start mb-2">
-                                <span class="text-yellow-500 font-bold text-xs uppercase tracking-widest bg-yellow-500/10 px-2 py-1 rounded">Champion</span>
-                                <i data-lucide="tv" class="w-4 h-4 text-slate-500"></i>
+                                <span class="text-yellow-600 dark:text-yellow-500 font-bold text-xs uppercase tracking-widest bg-yellow-100 dark:bg-yellow-500/10 px-2 py-1 rounded">Champion</span>
+                                <i data-lucide="tv" class="w-4 h-4 text-slate-400 dark:text-slate-500"></i>
                             </div>
-                            <div class="text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_1">Channel 7 Stadium</div>
-                            <div class="text-slate-400 text-sm flex items-center gap-1"><i data-lucide="weight" class="w-3 h-3"></i> <span data-i18n="hof_weight">118 lbs</span></div>
+                            <div class="text-slate-900 dark:text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_1">Channel 7 Stadium</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1"><i data-lucide="weight" class="w-3 h-3"></i> <span data-i18n="hof_weight">118 lbs</span></div>
                         </div>
                         
                         <!-- Card 2 -->
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition duration-300">
+                        <div class="bg-white/80 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition duration-300">
                             <div class="flex justify-between items-start mb-2">
-                                <span class="text-yellow-500 font-bold text-xs uppercase tracking-widest bg-yellow-500/10 px-2 py-1 rounded">Champion</span>
-                                <i data-lucide="tv" class="w-4 h-4 text-slate-500"></i>
+                                <span class="text-yellow-600 dark:text-yellow-500 font-bold text-xs uppercase tracking-widest bg-yellow-100 dark:bg-yellow-500/10 px-2 py-1 rounded">Champion</span>
+                                <i data-lucide="tv" class="w-4 h-4 text-slate-400 dark:text-slate-500"></i>
                             </div>
-                            <div class="text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_2">Channel 9 (Assawindam)</div>
-                            <div class="text-slate-400 text-sm flex items-center gap-1"><i data-lucide="weight" class="w-3 h-3"></i> <span data-i18n="hof_weight">118 lbs</span></div>
+                            <div class="text-slate-900 dark:text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_2">Channel 9 (Assawindam)</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1"><i data-lucide="weight" class="w-3 h-3"></i> <span data-i18n="hof_weight">118 lbs</span></div>
                         </div>
 
                         <!-- Card 3 -->
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition duration-300">
+                        <div class="bg-white/80 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition duration-300">
                             <div class="flex justify-between items-start mb-2">
-                                <span class="text-yellow-500 font-bold text-xs uppercase tracking-widest bg-yellow-500/10 px-2 py-1 rounded">Champion</span>
-                                <i data-lucide="award" class="w-4 h-4 text-slate-500"></i>
+                                <span class="text-yellow-600 dark:text-yellow-500 font-bold text-xs uppercase tracking-widest bg-yellow-100 dark:bg-yellow-500/10 px-2 py-1 rounded">Champion</span>
+                                <i data-lucide="award" class="w-4 h-4 text-slate-400 dark:text-slate-500"></i>
                             </div>
-                            <div class="text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_3">Fertilizer Brand Tournament</div>
-                            <div class="text-slate-400 text-sm" data-i18n="hof_3_sub">Channel 9 Assawindam</div>
+                            <div class="text-slate-900 dark:text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_3">Fertilizer Brand Tournament</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm" data-i18n="hof_3_sub">Channel 9 Assawindam</div>
                         </div>
 
                         <!-- Card 4 -->
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 hover:border-green-500 transition duration-300">
+                        <div class="bg-white/80 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-green-500 transition duration-300">
                             <div class="flex justify-between items-start mb-2">
-                                <span class="text-slate-300 font-bold text-xs uppercase tracking-widest bg-slate-700 px-2 py-1 rounded">Gold Medal</span>
-                                <i data-lucide="medal" class="w-4 h-4 text-slate-500"></i>
+                                <span class="text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded">Gold Medal</span>
+                                <i data-lucide="medal" class="w-4 h-4 text-slate-400 dark:text-slate-500"></i>
                             </div>
-                            <div class="text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_4">TNSU Games #38</div>
-                            <div class="text-green-400 text-sm font-semibold flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3 h-3"></i> <span data-i18n="hof_4_sub">Best Boxer Award</span></div>
+                            <div class="text-slate-900 dark:text-white font-bold text-lg leading-tight mb-1" data-i18n="hof_4">TNSU Games #38</div>
+                            <div class="text-green-600 dark:text-green-400 text-sm font-semibold flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3 h-3"></i> <span data-i18n="hof_4_sub">Best Boxer Award</span></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Video Highlight Section -->
                 <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
-                    <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2 uppercase tracking-wider border-b border-slate-700 pb-2">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 pb-2">
                         <i data-lucide="play-circle" class="w-5 h-5 text-red-500"></i> <span data-i18n="video_header">Action Highlights</span>
                     </h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         <!-- Video 1 -->
-                        <a href="https://www.youtube.com/watch?v=s8S5W1lGxsI" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-700 shadow-lg bg-slate-900 hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
+                        <a href="https://www.youtube.com/watch?v=s8S5W1lGxsI" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 shadow-lg bg-black hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
                              <img src="https://img.youtube.com/vi/s8S5W1lGxsI/mqdefault.jpg" alt="Video 1" class="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 transition">
                              <div class="absolute inset-0 flex items-center justify-center">
                                  <div class="bg-red-600 rounded-full p-2 shadow-lg play-btn-pulse">
@@ -318,7 +352,7 @@
                              </div>
                         </a>
                         <!-- Video 2 -->
-                        <a href="https://www.youtube.com/watch?v=Oa405IJf5V8" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-700 shadow-lg bg-slate-900 hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
+                        <a href="https://www.youtube.com/watch?v=Oa405IJf5V8" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 shadow-lg bg-black hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
                             <img src="https://img.youtube.com/vi/Oa405IJf5V8/mqdefault.jpg" alt="Video 2" class="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 transition">
                              <div class="absolute inset-0 flex items-center justify-center">
                                  <div class="bg-red-600 rounded-full p-2 shadow-lg play-btn-pulse">
@@ -327,7 +361,7 @@
                              </div>
                         </a>
                         <!-- Video 3 -->
-                        <a href="https://www.youtube.com/watch?v=kMERRrf197s" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-700 shadow-lg bg-slate-900 hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
+                        <a href="https://www.youtube.com/watch?v=kMERRrf197s" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 shadow-lg bg-black hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
                              <img src="https://img.youtube.com/vi/kMERRrf197s/mqdefault.jpg" alt="Video 3" class="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 transition">
                              <div class="absolute inset-0 flex items-center justify-center">
                                  <div class="bg-red-600 rounded-full p-2 shadow-lg play-btn-pulse">
@@ -336,7 +370,7 @@
                              </div>
                         </a>
                         <!-- Video 4 -->
-                        <a href="https://www.youtube.com/watch?v=cJkDasEK6F4" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-700 shadow-lg bg-slate-900 hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
+                        <a href="https://www.youtube.com/watch?v=cJkDasEK6F4" target="_blank" class="block aspect-video rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 shadow-lg bg-black hover:border-red-500 hover:scale-105 transition duration-300 relative group/video">
                             <img src="https://img.youtube.com/vi/cJkDasEK6F4/mqdefault.jpg" alt="Video 4" class="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 transition">
                              <div class="absolute inset-0 flex items-center justify-center">
                                  <div class="bg-red-600 rounded-full p-2 shadow-lg play-btn-pulse">
@@ -347,8 +381,8 @@
                     </div>
 
                     <!-- Search More Action -->
-                    <div class="text-center p-4 bg-slate-900/50 rounded-lg border border-slate-700">
-                        <p class="text-slate-300 text-sm mb-3" data-i18n="search_label">Want to see more fight records?</p>
+                    <div class="text-center p-4 bg-white/50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-3" data-i18n="search_label">Want to see more fight records?</p>
                         <a href="https://www.youtube.com/results?search_query=เพชรภูซาง+กีล่าสปอร์ต" target="_blank" class="yt-btn inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-800 border border-slate-600 text-white font-semibold transition duration-300 transform hover:scale-105 group/search">
                             <i data-lucide="search" class="w-4 h-4 text-red-500 group-hover/search:text-white transition"></i>
                             <span data-i18n="search_btn">Search "Phetphusang Kila Sport"</span>
@@ -358,7 +392,7 @@
 
                 <!-- Teaching Experience (Updated) -->
                 <div class="glass-panel p-6 md:p-8 rounded-xl">
-                     <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2 uppercase tracking-wider border-b border-slate-700 pb-2">
+                     <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 pb-2">
                         <i data-lucide="briefcase" class="w-5 h-5 text-red-500"></i> <span data-i18n="exp_header">Teaching Experience</span>
                     </h3>
                     
@@ -367,15 +401,15 @@
                         <div class="flex gap-4 group">
                             <div class="flex flex-col items-center">
                                 <div class="w-4 h-4 bg-red-500 rounded-full shadow-[0_0_12px_rgba(239,68,68,0.6)] group-hover:scale-125 transition duration-300"></div>
-                                <div class="w-0.5 h-full bg-slate-700 my-1 group-hover:bg-red-900/50 transition"></div>
+                                <div class="w-0.5 h-full bg-slate-300 dark:bg-slate-700 my-1 group-hover:bg-red-500/50 transition"></div>
                             </div>
                             <div class="pb-2">
-                                <h4 class="text-xl font-bold text-white group-hover:text-red-400 transition" data-i18n="exp_1_role">Instructor of Muay Thai Skills and Physical Education</h4>
+                                <h4 class="text-xl font-bold text-slate-800 dark:text-white group-hover:text-red-500 dark:group-hover:text-red-400 transition" data-i18n="exp_1_role">Instructor of Muay Thai Skills and Physical Education</h4>
                                 <div class="flex items-center gap-2 my-2">
                                     <span class="text-xs font-bold text-white bg-red-600 px-2 py-1 rounded shadow-sm">2562 - 2568</span>
-                                    <span class="text-xs text-slate-400" data-i18n="exp_1_loc">@ TNSU Lampang</span>
+                                    <span class="text-xs text-slate-500 dark:text-slate-400" data-i18n="exp_1_loc">@ TNSU Lampang</span>
                                 </div>
-                                <p class="text-slate-300 text-sm leading-relaxed bg-slate-800/50 p-3 rounded-lg border border-slate-700/50" data-i18n="exp_1_desc">
+                                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed bg-white/50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700/50" data-i18n="exp_1_desc">
                                     Responsible for teaching Muay Thai skills, physical education, game analysis, and sports psychology to undergraduate students (Former Special Instructor).
                                 </p>
                             </div>
@@ -384,19 +418,19 @@
                         <!-- Secondary Role -->
                         <div class="flex gap-4 group">
                             <div class="flex flex-col items-center">
-                                <div class="w-3 h-3 bg-slate-500 rounded-full group-hover:scale-125 transition duration-300"></div>
-                                <div class="w-0.5 h-full bg-slate-700 my-1"></div>
+                                <div class="w-3 h-3 bg-slate-400 dark:bg-slate-500 rounded-full group-hover:scale-125 transition duration-300"></div>
+                                <div class="w-0.5 h-full bg-slate-300 dark:bg-slate-700 my-1"></div>
                             </div>
                             <div>
-                                <h4 class="text-lg font-bold text-white" data-i18n="exp_2_role">Special Lecturer and Trainer</h4>
+                                <h4 class="text-lg font-bold text-slate-800 dark:text-white" data-i18n="exp_2_role">Special Lecturer and Trainer</h4>
                                 <p class="text-slate-500 text-xs uppercase tracking-wide mb-2 font-bold" data-i18n="exp_2_sub">Special Projects</p>
-                                <ul class="text-slate-300 text-sm space-y-3">
-                                    <li class="flex items-start gap-3 bg-slate-800/30 p-2 rounded hover:bg-slate-800 transition">
-                                        <i data-lucide="mic-2" class="w-4 h-4 text-yellow-500 mt-0.5"></i>
+                                <ul class="text-slate-600 dark:text-slate-300 text-sm space-y-3">
+                                    <li class="flex items-start gap-3 bg-white/50 dark:bg-slate-800/30 p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                                        <i data-lucide="mic-2" class="w-4 h-4 text-yellow-600 dark:text-yellow-500 mt-0.5"></i>
                                         <span data-i18n="exp_2_1">Speaker for Basic Amateur Muay Thai Instructor Training</span>
                                     </li>
-                                    <li class="flex items-start gap-3 bg-slate-800/30 p-2 rounded hover:bg-slate-800 transition">
-                                        <i data-lucide="award" class="w-4 h-4 text-yellow-500 mt-0.5"></i>
+                                    <li class="flex items-start gap-3 bg-white/50 dark:bg-slate-800/30 p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                                        <i data-lucide="award" class="w-4 h-4 text-yellow-600 dark:text-yellow-500 mt-0.5"></i>
                                         <span data-i18n="exp_2_2">Excellent Amateur Muay Thai Trainer Award (TNSU Games #40)</span>
                                     </li>
                                 </ul>
@@ -409,21 +443,21 @@
                 <div>
                     <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3" data-i18n="skills_header">Key Expertise</h4>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div class="bg-slate-800/80 p-3 rounded-lg text-center border border-slate-700 hover:border-red-500 hover:text-white transition group cursor-default">
-                            <i data-lucide="zap" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-xs font-bold block">Muay Thai Tech</span>
+                        <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg text-center border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-white dark:hover:text-white transition group cursor-default shadow-sm hover:bg-red-500 dark:hover:bg-transparent">
+                            <i data-lucide="zap" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 group-hover:text-white transition"></i>
+                            <span class="text-xs font-bold block text-slate-700 dark:text-white group-hover:text-white">Muay Thai Tech</span>
                         </div>
-                        <div class="bg-slate-800/80 p-3 rounded-lg text-center border border-slate-700 hover:border-red-500 hover:text-white transition group cursor-default">
-                            <i data-lucide="dumbbell" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-xs font-bold block">Strength & Cond.</span>
+                        <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg text-center border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-white dark:hover:text-white transition group cursor-default shadow-sm hover:bg-red-500 dark:hover:bg-transparent">
+                            <i data-lucide="dumbbell" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 group-hover:text-white transition"></i>
+                            <span class="text-xs font-bold block text-slate-700 dark:text-white group-hover:text-white">Strength & Cond.</span>
                         </div>
-                        <div class="bg-slate-800/80 p-3 rounded-lg text-center border border-slate-700 hover:border-red-500 hover:text-white transition group cursor-default">
-                            <i data-lucide="target" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-xs font-bold block">Pad Holding</span>
+                        <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg text-center border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-white dark:hover:text-white transition group cursor-default shadow-sm hover:bg-red-500 dark:hover:bg-transparent">
+                            <i data-lucide="target" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 group-hover:text-white transition"></i>
+                            <span class="text-xs font-bold block text-slate-700 dark:text-white group-hover:text-white">Pad Holding</span>
                         </div>
-                        <div class="bg-slate-800/80 p-3 rounded-lg text-center border border-slate-700 hover:border-red-500 hover:text-white transition group cursor-default">
-                            <i data-lucide="book-open" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-xs font-bold block" data-i18n="pedagogy">Pedagogy</span>
+                        <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg text-center border border-slate-200 dark:border-slate-700 hover:border-red-500 hover:text-white dark:hover:text-white transition group cursor-default shadow-sm hover:bg-red-500 dark:hover:bg-transparent">
+                            <i data-lucide="book-open" class="w-6 h-6 text-red-500 mx-auto mb-2 group-hover:scale-110 group-hover:text-white transition"></i>
+                            <span class="text-xs font-bold block text-slate-700 dark:text-white group-hover:text-white" data-i18n="pedagogy">Pedagogy</span>
                         </div>
                     </div>
                 </div>
@@ -432,15 +466,15 @@
         </div>
         
         <!-- Footer -->
-        <div class="mt-16 border-t border-slate-800 pt-8 text-center">
+        <div class="mt-16 border-t border-slate-200 dark:border-slate-800 pt-8 text-center">
             
             <!-- Growth Mindset Statement (Added here) -->
-            <p class="text-slate-400 text-sm mb-4 max-w-2xl mx-auto italic" data-i18n="growth_mindset">
+            <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 max-w-2xl mx-auto italic" data-i18n="growth_mindset">
                 "While my English is developing, I am a fast learner, eager to improve, and ready to adapt to your gym's culture."
             </p>
 
-            <p class="text-slate-500 text-sm font-medium" data-i18n="footer_quote">Ready to Train Champions.</p>
-            <p class="text-slate-600 text-xs mt-1">© 2025 Jakkapan Prakobsri</p>
+            <p class="text-slate-600 dark:text-slate-500 text-sm font-medium" data-i18n="footer_quote">Ready to Train Champions.</p>
+            <p class="text-slate-500 dark:text-slate-600 text-xs mt-1">© 2025 Jakkapan Prakobsri</p>
         </div>
 
     </div>
@@ -454,7 +488,7 @@
                 name: "Jakkapan (Dream)",
                 surname: "Prakobsri",
                 job_title: "FULL-TIME MUAY THAI TRAINER",
-                bio: "\"Blending the spirit of a <strong class=\"text-yellow-400 font-normal\">Channel 7 Stadium Champion</strong> with a <strong class=\"text-blue-400 font-normal\">Master's Degree</strong> in Physical Education. Focusing on effective, fun, and safe training, ready to pass on professional-level skills.\"",
+                bio: "\"Blending the spirit of a <strong class=\"text-yellow-600 dark:text-yellow-400 font-bold dark:font-normal\">Channel 7 Stadium Champion</strong> with a <strong class=\"text-blue-600 dark:text-blue-400 font-bold dark:font-normal\">Master's Degree</strong> in Physical Education. Focusing on effective, fun, and safe training, ready to pass on professional-level skills.\"",
                 contact_manager: "Manager: praetinee@gmail.com",
                 stats_header: "Fighter Stats",
                 fight_name_label: "Fight Name",
@@ -462,8 +496,8 @@
                 weight_label: "Weight Class",
                 weight_class: "(Bantamweight)",
                 style_label: "Style",
-                style_main: "Technical (Muay Femeu)",
-                style_desc: "Tactical & All-round",
+                style_main: "Muay Femeu (IQ Fighter)",
+                style_desc: "Smart, Witty & Tactical",
                 edu_header: "Education",
                 edu_master: "Master's Degree",
                 edu_master_loc: "Thailand National Sports University, Chiang Mai",
@@ -504,13 +538,13 @@
                 pedagogy: "Pedagogy",
                 growth_mindset: "\"While my English is developing, I am a fast learner, eager to improve, and ready to adapt to your gym's culture.\"",
                 footer_quote: "Ready to Train Champions.",
-                switch_btn: "Switch to TH"
+                switch_btn: "TH"
             },
             th: {
                 name: "จักรพันธ์ (ดรีม)",
                 surname: "ประกอบศรี",
                 job_title: "เทรนเนอร์มวยไทย (Full-Time)",
-                bio: "\"ผสมผสานจิตวิญญาณ<strong class=\"text-yellow-400 font-normal\">แชมป์มวยไทยช่อง 7 สี</strong> กับหลักวิชาการพลศึกษาระดับ<strong class=\"text-blue-400 font-normal\">ปริญญาโท</strong> มุ่งเน้นการสอนที่ได้ผลจริง สนุก และปลอดภัย\"",
+                bio: "\"ผสมผสานจิตวิญญาณ<strong class=\"text-yellow-600 dark:text-yellow-400 font-bold dark:font-normal\">แชมป์มวยไทยช่อง 7 สี</strong> กับหลักวิชาการพลศึกษาระดับ<strong class=\"text-blue-600 dark:text-blue-400 font-bold dark:font-normal\">ปริญญาโท</strong> มุ่งเน้นการสอนที่ได้ผลจริง สนุก และปลอดภัย\"",
                 contact_manager: "ผู้จัดการ: praetinee@gmail.com",
                 stats_header: "สถิติการชก",
                 fight_name_label: "ฉายา",
@@ -519,7 +553,7 @@
                 weight_class: "(แบนตั้มเวท)",
                 style_label: "สไตล์การชก",
                 style_main: "มวยฝีมือ (Muay Femeu)",
-                style_desc: "ครบเครื่องและแก้เกมเก่ง",
+                style_desc: "ฉลาดหลักแหลมและใช้ไหวพริบในการชก",
                 edu_header: "การศึกษา",
                 edu_master: "ปริญญาโท",
                 edu_master_loc: "ม.การกีฬาแห่งชาติ ว.เชียงใหม่",
@@ -560,7 +594,7 @@
                 pedagogy: "ทักษะการสอน (Pedagogy)",
                 growth_mindset: "\"ถึงภาษาอังกฤษจะไม่แข็งแรง แต่ผมพร้อมเรียนรู้และปรับตัวอย่างเต็มที่ครับ\"",
                 footer_quote: "พร้อมสร้างแชมป์คนต่อไป",
-                switch_btn: "เปลี่ยนเป็น EN"
+                switch_btn: "TH"
             }
         };
 
@@ -569,6 +603,27 @@
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'th' : 'en';
             updateContent();
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeIcon.innerHTML = `<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>`; // Moon icon for when current is Light mode (click to go dark) - wait, logic is reverse.
+                // Current is LIGHT mode. Button should show MOON to switch to DARK.
+                themeIcon.setAttribute('data-lucide', 'moon');
+                themeIcon.classList.remove('text-yellow-500');
+                themeIcon.classList.add('text-slate-700');
+            } else {
+                html.classList.add('dark');
+                // Current is DARK mode. Button should show SUN to switch to LIGHT.
+                themeIcon.setAttribute('data-lucide', 'sun');
+                themeIcon.classList.remove('text-slate-700');
+                themeIcon.classList.add('text-yellow-500');
+            }
+            lucide.createIcons();
         }
 
         function updateContent() {
@@ -582,16 +637,16 @@
                 }
             });
 
-            // Update Button
+            // Update Language Button Text
             const langIcon = document.getElementById('lang-icon');
             const langText = document.getElementById('lang-text');
             
             if (currentLang === 'en') {
                 langIcon.textContent = '🇹🇭';
-                langText.textContent = 'Switch to TH';
+                langText.textContent = 'TH';
             } else {
                 langIcon.textContent = '🇬🇧';
-                langText.textContent = 'Switch to EN';
+                langText.textContent = 'EN';
             }
         }
 
