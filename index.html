@@ -34,16 +34,16 @@
         
         /* Glass Panel - Adaptive */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.7); /* Light mode default */
+            background-color: rgba(255, 255, 255, 0.7); /* Light mode default */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         /* Dark Mode Glass Override */
         .dark .glass-panel {
-            background: rgba(30, 41, 59, 0.8);
+            background-color: rgba(30, 41, 59, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -51,15 +51,35 @@
             text-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
         }
 
-        /* Animated Gradient Background */
-        @keyframes shine {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
+        /* Animated Gradient Background - FIXED LAYER */
+        @keyframes shine-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
+        
         .champion-bg {
-            background: linear-gradient(90deg, rgba(234, 179, 8, 0.1) 25%, rgba(234, 179, 8, 0.2) 50%, rgba(234, 179, 8, 0.1) 75%);
-            background-size: 200% auto;
-            animation: shine 4s linear infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Using pseudo-element to preserve base background color */
+        .champion-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent 0%, 
+                rgba(234, 179, 8, 0.05) 25%, 
+                rgba(234, 179, 8, 0.2) 50%, 
+                rgba(234, 179, 8, 0.05) 75%, 
+                transparent 100%
+            );
+            animation: shine-move 3s linear infinite;
+            pointer-events: none;
         }
 
         /* YouTube Button Hover */
